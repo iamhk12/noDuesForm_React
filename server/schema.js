@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const studentSchema = new mongoose.Schema({
     rollNumber: {
         type: String,
-        required : true,
+        required: true,
         trim: true
     },
     fullName: {
@@ -72,4 +72,37 @@ const studentSchema = new mongoose.Schema({
 // Define the model
 const Student = mongoose.model('student', studentSchema);
 
-module.exports = Student;
+const requestSchema = new mongoose.Schema({
+    rollNumber: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    fullName: {
+        type: String,
+        trim: true
+    },
+    classValue: {
+        type: String,
+        trim: true
+    },
+    semester: {
+        type: String,
+        trim: true
+    },
+    labs: {
+        type: Boolean
+    },
+    store: {
+        type: Boolean
+    },
+    tpc: {
+        type: Boolean
+    },
+    library: {
+        type: Boolean
+    }
+})
+const Request = mongoose.model('request', requestSchema);
+
+module.exports = { Student, Request };

@@ -8,7 +8,7 @@ const Form = (props) => {
 
     const navigate = useNavigate();
     const [fullName, setFullName] = useState('');
-    const [rollNumber, setRollNumber] = useState(props.rollno || '');
+    const [rollNumber, setRollNumber] = useState(localStorage.getItem('rollno') || '');
     const [classValue, setClassValue] = useState('');
     const [passedOutYear, setPassedOutYear] = useState('');
     const [postalAddress, setPostalAddress] = useState('');
@@ -24,80 +24,138 @@ const Form = (props) => {
     const [offerLetter, setOfferLetter] = useState(null);
     const [letterOfJoining, setLetterOfJoining] = useState(null);
 
-    const [DATA, setDATA] = useState({});
+
+
+
+    // const getStudent = async () => {
+    //     const storedRollNumber = localStorage.getItem('rollno');
+    //     const storedPassword = localStorage.getItem('password');
+    //     const response = await fetch('http://localhost:5000/getStudent', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ rollNumber: storedRollNumber })
+    //     });
+
+    //     if (response.ok) {
+    //         const student = await response.json();
+
+    //         // Check if stored password matches fetched student data password
+    //         if (storedPassword === student.password) {
+    //             console.log("Good")
+    //         } else {
+    //             navigate('/logout');
+    //             return;
+    //         }
+
+    //         if (student.isFilled)
+    //             navigate('/request')
+    //     } else {
+    //         navigate('/');
+    //     }
+    // };
 
     useEffect(() => {
-        const storedRollNumber = localStorage.getItem('rollno');
-        const storedPassword = localStorage.getItem('password');
-        const expirationDate = new Date(localStorage.getItem('expirationDate'));
-
-        if (storedRollNumber && storedPassword && expirationDate > new Date()) {
+        const fetchStudentData = async () => {
+          const storedRollNumber = localStorage.getItem('rollno');
+          const storedPassword = localStorage.getItem('password');
+          const expirationDate = new Date(localStorage.getItem('expirationDate'));
+      
+          if (storedRollNumber && storedPassword && expirationDate > new Date()) {
             setRollNumber(storedRollNumber);
-            getStudent(storedRollNumber);
-        } else {
-            // Clear the stored values if expired or not present
-            localStorage.removeItem('rollno');
-            localStorage.removeItem('password');
-            localStorage.removeItem('expirationDate');
-            navigate('/');
-        }
-        // eslint-disable-next-line 
-    }, []);
-
-
-    const getStudent = async (roll) => {
-        const response = await fetch('http://localhost:5000/getStudent', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ rollNumber: roll })
-        });
-
-        if (response.ok) {
-            const student = await response.json();
-            setDATA(student);
-
-            // Check if stored password matches fetched student data password
-            const storedPassword = localStorage.getItem('password');
-            if (storedPassword === student.password) {
-                console.log("Good")
-            } else {
-                navigate('/logout');
-                return;
+            try {
+              const response = await fetch('http://localhost:5000/getStudent', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ rollNumber: storedRollNumber }),
+              });
+      
+              if (response.ok) {
+                const student = await response.json();
+      
+                // Check if stored password matches fetched student data password
+                if (storedPassword === student.password) {
+                  console.log("Good")
+                  if (student.isFilled) {
+                    navigate('/request');
+                  }
+                } else {
+                  navigate('/logout');
+                }
+              } else {
+                navigate('/');
+              }
+            } catch (error) {
+              console.log(error);
+              // Handle error that occurred during the request
             }
-        } else {
-            const errorResponse = await response.json();
-            console.log(errorResponse);
-        }
-    };
-
-
-
-    const handleSubmit = (e) => {
-
-        const storedRollNumber = localStorage.getItem('rollno');
-        const storedPassword = localStorage.getItem('password');
-        const expirationDate = new Date(localStorage.getItem('expirationDate'));
-
-        if (storedRollNumber && storedPassword && expirationDate > new Date()) {
-            setRollNumber(storedRollNumber);
-            console.log(storedRollNumber)
-
-
-
-        } else {
+          } else {
             // Clear the stored values if expired or not present
             localStorage.removeItem('rollno');
             localStorage.removeItem('password');
             localStorage.removeItem('expirationDate');
-
             navigate('/');
-        }
+          }
+        };
+      
+        fetchStudentData();
+      }, [navigate]);
+      
 
+
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (isConfirmed) {
-            // On Submit
+            try {
+                const formData = {
+                    rollNumber,
+                    fullName,
+                    classValue,
+                    passedOutYear,
+                    postalAddress,
+                    email,
+                    semester,
+                    phone,
+                    date: date.toISOString(),
+                    feeReceiptNumber,
+                    amount,
+                    areYouPlaced: areYouPlaced.toString(),
+                    offerLetter: offerLetter ? offerLetter.name : '',
+                    letterOfJoining: letterOfJoining ? letterOfJoining.name : '',
+                };
+
+                const response = await fetch('http://localhost:5000/submitform', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    if (response.status === 200)
+                        alert("Form submitted successfully")
+
+                    navigate('/request')
+                    // Handle success message or perform any other actions
+
+                } else {
+                    const errorResponse = await response.json();
+                    console.log(errorResponse.error);
+                    // Handle error response or perform any other actions
+                }
+
+            } catch (error) {
+                console.log(error);
+                // Handle any error that occurred during form submission
+            }
+
         } else {
             setIsConfirmed(true);
         }

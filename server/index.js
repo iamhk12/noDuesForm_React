@@ -10,12 +10,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 const port = 5000;
-const db = ""; //Put the database connection string here
+const db = "mongodb+srv://rait:rait@cluster0.co23ho5.mongodb.net/raitnodues";
 
 app.use(require("./routes"));
 
 mongoose.connect(db).then(() => {
-    console.log("success")
+    console.log("Connection successful")
 }).catch((err) => {
     console.log(err)
 });
