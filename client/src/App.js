@@ -5,17 +5,19 @@ import Form from './Pages/Form'
 import Logout from './Pages/Logout';
 import Request from './Pages/Request';
 import "./App.css"
+import AdminLogin from './Admin/AdminLogin';
+import AdminRequests from './Admin/AdminRequests';
 
 function App() {
-
-
   return (
     <>
       <Routes>
-        <Route path='/' element={<Login/>} />
+        <Route path='/login' element={<Login/>} />
         <Route path='/form' element={<Form/>} />
         <Route path='/request' element={<Request/>}/>
         <Route path='/logout' element={<Logout/>} />
+        <Route path='/admin/login' element={<AdminLogin/>} />
+        <Route path='/adminrequests' element={<AdminRequests/>} />
       </Routes>
     </>
   );

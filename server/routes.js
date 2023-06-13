@@ -101,23 +101,40 @@ router.post('/submitform', async (req, res) => {
 
     await student.save();
 
-    const rq = await Request.findOne({ rollNumber })
+    let rq = await Request.findOne({ rollNumber });
 
-    if (!rq) {
-      const newReq = new Request({
+    if (rq) {
+      rq.fullName = fullName;
+      rq.classValue = classValue;
+      rq.semester = semester;
+      rq.celabs = false;
+      rq.commonlabs = false;
+      rq.accounts = false;
+      rq.exam = false;
+      rq.library = false;
+      rq.deplib = false;
+      rq.store = false;
+      rq.tpc = false;
+
+      await rq.save();
+    } else {
+      rq = new Request({
         rollNumber,
         fullName,
         classValue,
         semester,
-        labs: false,
+        celabs: false,
+        commonlabs: false,
+        accounts: false,
+        exam: false,
+        library: false,
+        deplib: false,
         store: false,
-        tpc: false,
-        library: false
+        tpc: false
       });
 
-      await newReq.save();
+      await rq.save();
     }
-
 
     res.status(200).json({ message: 'Form submitted successfully' });
   } catch (error) {
@@ -125,6 +142,7 @@ router.post('/submitform', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 router.post('/getStudentRequest', async (req, res) => {
   const { rollNumber } = req.body;
@@ -143,4 +161,41 @@ router.post('/getStudentRequest', async (req, res) => {
   }
 });
 
+
+
+router.post('/adminrequests', async (req, res) => {
+  try {
+    const { section } = req.body;
+
+    console.log("Searching request for ", section)
+
+    // Find requests with false in the given section
+    const requests = await Request.find({ [section]: false });
+
+    res.status(200).json(requests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+router.post('/updateRequest', async (req, res) => {
+  try {
+    const { requestId, section } = req.body;
+
+    // Find the request in the database
+    const request = await Request.findById(requestId);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+
+    request[section] = true;
+    const updatedRequest = await request.save();
+
+    return res.json(updatedRequest);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to update request' });
+  }
+});
 module.exports = router;

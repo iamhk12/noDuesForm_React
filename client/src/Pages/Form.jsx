@@ -24,89 +24,51 @@ const Form = (props) => {
     const [offerLetter, setOfferLetter] = useState(null);
     const [letterOfJoining, setLetterOfJoining] = useState(null);
 
-
-
-
-    // const getStudent = async () => {
-    //     const storedRollNumber = localStorage.getItem('rollno');
-    //     const storedPassword = localStorage.getItem('password');
-    //     const response = await fetch('http://localhost:5000/getStudent', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ rollNumber: storedRollNumber })
-    //     });
-
-    //     if (response.ok) {
-    //         const student = await response.json();
-
-    //         // Check if stored password matches fetched student data password
-    //         if (storedPassword === student.password) {
-    //             console.log("Good")
-    //         } else {
-    //             navigate('/logout');
-    //             return;
-    //         }
-
-    //         if (student.isFilled)
-    //             navigate('/request')
-    //     } else {
-    //         navigate('/');
-    //     }
-    // };
-
     useEffect(() => {
         const fetchStudentData = async () => {
-          const storedRollNumber = localStorage.getItem('rollno');
-          const storedPassword = localStorage.getItem('password');
-          const expirationDate = new Date(localStorage.getItem('expirationDate'));
-      
-          if (storedRollNumber && storedPassword && expirationDate > new Date()) {
-            setRollNumber(storedRollNumber);
-            try {
-              const response = await fetch('http://localhost:5000/getStudent', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ rollNumber: storedRollNumber }),
-              });
-      
-              if (response.ok) {
-                const student = await response.json();
-      
-                // Check if stored password matches fetched student data password
-                if (storedPassword === student.password) {
-                  console.log("Good")
-                  if (student.isFilled) {
-                    navigate('/request');
-                  }
-                } else {
-                  navigate('/logout');
+            const storedRollNumber = localStorage.getItem('rollno');
+            const storedPassword = localStorage.getItem('password');
+            const expirationDate = new Date(localStorage.getItem('expirationDate'));
+
+            if (storedRollNumber && storedPassword && expirationDate > new Date()) {
+                setRollNumber(storedRollNumber);
+                try {
+                    const response = await fetch('http://localhost:5000/getStudent', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ rollNumber: storedRollNumber }),
+                    });
+                    if (response.status === 401)
+                        navigate('/logout')
+                    if (response.ok) {
+                        const student = await response.json();
+                        if (storedPassword === student.password) {
+                            console.log("Good")
+                            if (student.isFilled) {
+                                navigate('/request');
+                            }
+                        } else {
+                            navigate('/logout');
+                        }
+                    } else {
+                        navigate('/login');
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-              } else {
-                navigate('/');
-              }
-            } catch (error) {
-              console.log(error);
-              // Handle error that occurred during the request
+            } else {
+                // Clear the stored values if expired or not present
+                localStorage.removeItem('rollno');
+                localStorage.removeItem('password');
+                localStorage.removeItem('expirationDate');
+                navigate('/login');
             }
-          } else {
-            // Clear the stored values if expired or not present
-            localStorage.removeItem('rollno');
-            localStorage.removeItem('password');
-            localStorage.removeItem('expirationDate');
-            navigate('/');
-          }
         };
-      
+
         fetchStudentData();
-      }, [navigate]);
-      
-
-
-
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

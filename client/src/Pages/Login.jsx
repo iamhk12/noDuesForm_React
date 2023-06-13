@@ -19,7 +19,7 @@ const Login = () => {
             localStorage.removeItem('password');
             localStorage.removeItem('expirationDate');
 
-            navigate('/');
+            navigate('/login');
         }
         // eslint-disable-next-line
     }, []);
@@ -95,7 +95,7 @@ const Login = () => {
         const uppercaseRollno = inputValue.replace(/\s/g, "").toUpperCase();
         setRollno(uppercaseRollno);
     };
-
+    
     return (
         <>
             <div className="loginpage">

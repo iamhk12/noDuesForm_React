@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../components/NavB'
+import './Request.css'
 const Request = () => {
     const navigate = useNavigate();
     const [request, setRequest] = useState(null);
@@ -95,19 +96,28 @@ const Request = () => {
 
     return (
         <>
-        <Nav/>
+            <Nav />
             {/* Display the request object */}
             {request && (
-                <div>
-                    <h2>Request Details</h2>
-                    <p>Roll Number: {request.rollNumber}</p>
-                    <p>Full Name: {request.fullName}</p>
-                    <p>Class: {request.classValue}</p>
-                    <p>Semester: {request.semester}</p>
-                    <p>Labs: {request.labs ? 'Approved' : 'Pending'}</p>
-                    <p>Store: {request.store ? 'Approved' : 'Pending'}</p>
-                    <p>TPC: {request.tpc ? 'Approved' : 'Pending'}</p>
-                    <p>Library: {request.library ? 'Approved' : 'Pending'}</p>
+                <div className='requestpage'>
+                    <div className='req'>
+                        <h2 className='reqhead'>Request Details</h2>
+                        <p>Roll Number: <span className='boldtext'>{request.rollNumber}</span></p>
+                        <p>Full Name:<span className='boldtext'> {request.fullName}</span></p>
+                        <p>Class: <span className='boldtext'>{request.classValue}</span></p>
+                        <p>Semester: <span className='boldtext'>{request.semester}</span></p>
+                        <p>Computer Engg. Labs: <span className={request.celabs ? 'approved boldtext' : 'pending boldtext'}>{request.celabs ? 'Approved' : 'Pending'}</span></p>
+                        <p>FE Labs: <span className={request.commonlabs ? 'approved boldtext' : 'pending boldtext'}>{request.commonlabs ? 'Approved' : 'Pending'}</span></p>
+                        <p>Accounts section: <span className={request.accounts ? 'approved boldtext' : 'pending boldtext'}>{request.accounts ? 'Approved' : 'Pending'}</span></p>
+                        <p>Exam section: <span className={request.exam ? 'approved boldtext' : 'pending boldtext'}>{request.exam ? 'Approved' : 'Pending'}</span></p>
+                        <p>Library : <span className={request.library ? 'approved boldtext' : 'pending boldtext'}>{request.library ? 'Approved' : 'Pending'}</span></p>
+                        <p>Departmental Library : <span className={request.deplib ? 'approved boldtext' : 'pending boldtext'}>{request.deplib ? 'Approved' : 'Pending'}</span></p>
+                        <p>Store : <span className={request.store ? 'approved boldtext' : 'pending boldtext'}>{request.store ? 'Approved' : 'Pending'}</span></p>
+                        <p>Training & Placements : <span className={request.tpc ? 'approved boldtext' : 'pending boldtext'}>{request.tpc ? 'Approved' : 'Pending'}</span></p>
+
+
+                        
+                    </div>
                 </div>
             )}
         </>

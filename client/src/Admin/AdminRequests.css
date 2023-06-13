@@ -1,0 +1,12 @@
+.adminrequestpage.card {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.adminrequestpage {
+    max-width: 600px;
+    margin: 0 auto;
+}

@@ -12,14 +12,14 @@ const Logout = () => {
             localStorage.removeItem('password');
             localStorage.removeItem('expirationDate');
 
-            navigate('/');
+            navigate('/login');
         } else {
             // Clear the stored values if expired or not present
             localStorage.removeItem('rollno');
             localStorage.removeItem('password');
             localStorage.removeItem('expirationDate');
 
-            navigate('/');
+            navigate('/login');
         }
         // eslint-disable-next-line 
     }, []);

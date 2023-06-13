@@ -90,16 +90,28 @@ const requestSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    labs: {
+    celabs: {
+        type: Boolean
+    },
+    commonlabs:{
+        type:Boolean
+    },
+    accounts:{
+        type:Boolean,
+    },
+    exam:{
+        type:Boolean
+    },
+    library: {
+        type: Boolean
+    },
+    deplib: {
         type: Boolean
     },
     store: {
         type: Boolean
     },
     tpc: {
-        type: Boolean
-    },
-    library: {
         type: Boolean
     }
 })
