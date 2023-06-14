@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminRequests.css';
+import NavAdmin from './NavAdmin';
 
 const AdminRequests = () => {
     const navigate = useNavigate();
@@ -8,6 +9,28 @@ const AdminRequests = () => {
     const [requests, setRequests] = useState([]);
 
     useEffect(() => {
+        const storedID = localStorage.getItem('id');
+        const storedPassword = localStorage.getItem('password');
+        const expirationDate = new Date(localStorage.getItem('expirationDate'));
+
+        if (storedID && storedPassword && expirationDate > new Date()) {
+            if ((storedID === "celabs@rait" && storedPassword === "rait@celabs") ||
+                (storedID === "commonlabs@rait" && storedPassword === "rait@commonlabs") ||
+                (storedID === "accounts@rait" && storedPassword === "rait@accounts") ||
+                (storedID === "exam@rait" && storedPassword === "rait@exam") ||
+                (storedID === "library@rait" && storedPassword === "rait@library") ||
+                (storedID === "store@rait" && storedPassword === "rait@store") ||
+                (storedID === "deplib@rait" && storedPassword === "rait@deplib") ||
+                (storedID === "tpc@rait" && storedPassword === "rait@tpc")) {
+            } else {
+                localStorage.removeItem('rollno');
+                localStorage.removeItem('password');
+                localStorage.removeItem('expirationDate');
+
+                navigate('/admin/login');
+            }
+        }
+
         Verify();
         //eslint-disable-next-line
     }, []);
@@ -41,6 +64,7 @@ const AdminRequests = () => {
         if (section) {
             fetchRequests();
         }
+        //eslint-disable-next-line
     }, [section]);
 
     const fetchRequests = () => {
@@ -89,19 +113,20 @@ const AdminRequests = () => {
 
     return (
         <>
-            <div className='adminrequestpage'>
-                <h2>{section.toUpperCase()} Requests</h2>
-                {/* Display the requests */}
-                {requests.map((request) => (
-                    <div key={request._id} className='card'>
-                        <p>Roll Number: {request.rollNumber}</p>
-                        <p>Full Name: {request.fullName}</p>
-                        <p>Class: {request.classValue}</p>
-                        <p>Semester: {request.semester}</p>
-                        {/* Add more fields as needed */}
-                        <button onClick={() => handleApprove(request._id)}>Approve</button>
-                    </div>
-                ))}
+            <NavAdmin />
+            <div className='AR'>
+                <div className='adminrequestpage'>
+                    <h2>{section.toUpperCase()} Requests</h2>
+                    {requests.length > 0 ? requests.map((request) => (
+                        <div key={request._id} className='card'>
+                            <p>Roll Number: {request.rollNumber}</p>
+                            <p>Full Name: {request.fullName}</p>
+                            <p>Class: {request.classValue}</p>
+                            <p>Semester: {request.semester}</p>
+                            <button onClick={() => handleApprove(request._id)}>Approve</button>
+                        </div>
+                    )) : <h3>No pending requests for {section}</h3>}
+                </div>
             </div>
         </>
     );

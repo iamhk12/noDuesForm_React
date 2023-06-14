@@ -7,17 +7,19 @@ import Request from './Pages/Request';
 import "./App.css"
 import AdminLogin from './Admin/AdminLogin';
 import AdminRequests from './Admin/AdminRequests';
+import AdminLogout from './Admin/AdminLogout';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path='/login' element={<Login/>} />
-        <Route path='/form' element={<Form/>} />
-        <Route path='/request' element={<Request/>}/>
-        <Route path='/logout' element={<Logout/>} />
-        <Route path='/admin/login' element={<AdminLogin/>} />
-        <Route path='/adminrequests' element={<AdminRequests/>} />
+        <Route exact path='/login' element={<Login/>} />
+        <Route exact path='/form' element={<Form/>} />
+        <Route exact path='/request' element={<Request/>}/>
+        <Route exact path='/logout' element={<Logout/>} />
+        <Route exact path='/admin/login' element={<AdminLogin/>} />
+        <Route exact path='/adminrequests' element={<AdminRequests/>} />
+        <Route exact path='/admin/logout' element={<AdminLogout/>} />
       </Routes>
     </>
   );

@@ -12,7 +12,19 @@ const AdminLogin = () => {
         const expirationDate = new Date(localStorage.getItem('expirationDate'));
 
         if (storedID && storedPassword && expirationDate > new Date()) {
-            navigate('/adminrequests');
+            if ((storedID === "celabs@rait" && storedPassword === "rait@celabs") ||
+                (storedID === "commonlabs@rait" && storedPassword === "rait@commonlabs") ||
+                (storedID === "accounts@rait" && storedPassword === "rait@accounts") ||
+                (storedID === "exam@rait" && storedPassword === "rait@exam") ||
+                (storedID === "library@rait" && storedPassword === "rait@library") ||
+                (storedID === "store@rait" && storedPassword === "rait@store") ||
+                (storedID === "deplib@rait" && storedPassword === "rait@deplib") ||
+                (storedID === "tpc@rait" && storedPassword === "rait@tpc")) {
+
+                navigate('/adminrequests')
+            }
+
+
         } else {
             // Clear the stored values if expired or not present
             localStorage.removeItem('rollno');
@@ -64,7 +76,7 @@ const AdminLogin = () => {
         <>
             <div className="adminloginpage">
                 <div className="loginform">
-                    <h2>No Dues - Admin</h2>
+                    <h2>No Dues - Faculty</h2>
                     <form onSubmit={loginAdmin}>
                         <div className="detailslogin">
                             <label htmlFor="rollno">Section ID :</label>
