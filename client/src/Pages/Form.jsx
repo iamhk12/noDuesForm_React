@@ -35,7 +35,7 @@ const Form = (props) => {
             if (storedRollNumber && storedPassword && expirationDate > new Date()) {
                 setRollNumber(storedRollNumber);
                 try {
-                    const response = await fetch('http://localhost:5000/getStudent', {
+                    const response = await fetch('http://10.0.0.5:5000/getStudent', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const Form = (props) => {
         internship: internship ? internship : {},
         letterOfJoining: letterOfJoining ? letterOfJoining : {},
       };
-      const response = await fetch('http://localhost:5000/submitform', {
+      const response = await fetch('http://10.0.0.5:5000/submitform', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ const Root = () => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await fetch("http://localhost:5000/getAllStudents");
+                const response = await fetch("http://10.0.0.5:5000/getAllStudents");
                 if (response.ok) {
                     const data = await response.json();
                     setStudents(data.students);

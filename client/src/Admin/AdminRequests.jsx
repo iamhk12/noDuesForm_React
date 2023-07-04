@@ -75,7 +75,7 @@ const AdminRequests = () => {
     }, [section]);
 
     const fetchRequests = () => {
-        fetch('http://localhost:5000/adminrequests', {
+        fetch('http://10.0.0.5:5000/adminrequests', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const AdminRequests = () => {
       };
     
       // Send the updated request data to the backend
-      fetch('http://localhost:5000/updateRequest', {
+      fetch('http://10.0.0.5:5000/updateRequest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

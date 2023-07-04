@@ -23,7 +23,7 @@ const ChangePassword = () => {
     const rollNumber = localStorage.getItem("rollno");
 
     try {
-      const response = await fetch("http://localhost:5000/student/changePassword", {
+      const response = await fetch("http://10.0.0.5:5000/student/changePassword", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

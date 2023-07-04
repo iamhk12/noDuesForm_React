@@ -18,7 +18,7 @@ const Request = () => {
 
             if (storedRollNumber && storedPassword && expirationDate > new Date()) {
                 try {
-                    const response = await fetch('http://localhost:5000/getStudent', {
+                    const response = await fetch('http://10.0.0.5:5000/getStudent', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const Request = () => {
     }, []);
 
     const getStudentRequest = async (rollNumber) => {
-        const response = await fetch('http://localhost:5000/getStudentRequest', {
+        const response = await fetch('http://10.0.0.5:5000/getStudentRequest', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const Request = () => {
             // Update isCompleted field of the associated Student document if all values are true
             if (allTrue) {
                 try {
-                    const studentResponse = await fetch('http://localhost:5000/updateIsComp', {
+                    const studentResponse = await fetch('http://10.0.0.5:5000/updateIsComp', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
