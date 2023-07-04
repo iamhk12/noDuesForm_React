@@ -125,7 +125,7 @@ const Login = () => {
                                 placeholder=""
                                 className="form-input"
                             />
-
+                            <p style={{ fontSize : "12px", margin : "0"}}>Default Password : dypatil@123</p>
                             <input
                                 type="submit"
                                 value="Submit"

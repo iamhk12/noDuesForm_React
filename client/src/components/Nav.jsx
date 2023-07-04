@@ -23,6 +23,9 @@ const Nav = () => {
                         <NavLink to="/request">Request</NavLink>
                     </li>
                     <li>
+                        <NavLink to="/changepassword">Change Password</NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/logout">Logout</NavLink>
                     </li>
                 </ul>

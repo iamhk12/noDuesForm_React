@@ -234,6 +234,32 @@ router.post('/updateRequest', async (req, res) => {
   }
 });
 
+router.post('/student/changePassword', async (req, res) => {
+  const { rollNumber, currentPassword, newPassword } = req.body;
+
+  try {
+    const student = await Student.findOne({ rollNumber });
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Validate the current password
+    if (student.password !== currentPassword) {
+      return res.status(401).json({ message: 'Invalid current password' });
+    }
+
+    // Update the student's password
+    student.password = newPassword;
+    await student.save();
+
+    res.json({ passwordChanged: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+// Helper function to update the password
 
 router.post('/updateIsComp', async (req, res) => {
   const { rollNumber } = req.body;

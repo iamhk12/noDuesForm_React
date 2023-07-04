@@ -4,6 +4,7 @@ import Login from './Pages/Login'
 import Form from './Pages/Form'
 import Logout from './Pages/Logout';
 import Request from './Pages/Request';
+import ChangePassword from './Pages/ChangePassword'
 import "./App.css"
 import Root from "./Admin/Root"
 import AdminLogin from './Admin/AdminLogin';
@@ -18,6 +19,7 @@ function App() {
         <Route exact path='/login' element={<Login/>} />
         <Route exact path='/form' element={<Form/>} />
         <Route exact path='/request' element={<Request/>}/>
+        <Route exact path='/changepassword' element={<ChangePassword/>}/>
         <Route exact path='/logout' element={<Logout/>} />
         <Route exact path='/root' element={<Root/>} />
         <Route exact path='/admin/login' element={<AdminLogin/>} />
