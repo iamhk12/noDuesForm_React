@@ -72,82 +72,82 @@ const Form = (props) => {
         fetchStudentData();
     }, [navigate]);
 
-   const handleSubmit = async (e) => {
-  e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  if (isConfirmed) {
-    // Perform form validation
-    if (
-      rollNumber.trim() === '' ||
-      fullName.trim() === '' ||
-      department === '' ||
-      classValue.trim() === '' ||
-      passedOutYear.trim() === '' ||
-      postalAddress.trim() === '' ||
-      email.trim() === '' ||
-      semester.trim() === '' ||
-      phone.trim() === '' ||
-      feeReceiptNumber.trim() === '' ||
-      amount.trim() === ''
-    ) {
-      alert('Please fill in all the required fields.');
-      return;
-    }
+        if (isConfirmed) {
+            // Perform form validation
+            if (
+                rollNumber.trim() === '' ||
+                fullName.trim() === '' ||
+                department === '' ||
+                classValue.trim() === '' ||
+                passedOutYear.trim() === '' ||
+                postalAddress.trim() === '' ||
+                email.trim() === '' ||
+                semester.trim() === '' ||
+                phone.trim() === '' ||
+                feeReceiptNumber.trim() === '' ||
+                amount.trim() === ''
+            ) {
+                alert('Please fill in all the required fields.');
+                return;
+            }
 
-    if (areYouPlaced) {
-      if (!offerLetter.myfile || !letterOfJoining.myfile) {
-        alert('Please upload the required files.');
-        return;
-      }
-    }
+            if (areYouPlaced) {
+                if (!offerLetter.myfile || !letterOfJoining.myfile) {
+                    alert('Please upload the required files.');
+                    return;
+                }
+            }
 
-    try {
-      // Form data validation passed, proceed with form submission
-      const formData = {
-        rollNumber,
-        fullName,
-        department,
-        classValue,
-        passedOutYear,
-        postalAddress,
-        email,
-        semester,
-        phone,
-        date: date.toISOString(),
-        feeReceiptNumber,
-        amount,
-        areYouPlaced: areYouPlaced.toString(),
-        offerLetter: offerLetter ? offerLetter : {},
-        internship: internship ? internship : {},
-        letterOfJoining: letterOfJoining ? letterOfJoining : {},
-      };
-      const response = await fetch('http://10.0.0.5:5000/submitform', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+            try {
+                // Form data validation passed, proceed with form submission
+                const formData = {
+                    rollNumber,
+                    fullName,
+                    department,
+                    classValue,
+                    passedOutYear,
+                    postalAddress,
+                    email,
+                    semester,
+                    phone,
+                    date: date.toISOString(),
+                    feeReceiptNumber,
+                    amount,
+                    areYouPlaced: areYouPlaced.toString(),
+                    offerLetter: offerLetter ? offerLetter : {},
+                    internship: internship ? internship : {},
+                    letterOfJoining: letterOfJoining ? letterOfJoining : {},
+                };
+                const response = await fetch('http://10.0.0.5:5000/submitform', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
 
-      if (response.ok) {
-        if (response.status === 200)
-          alert('Form submitted successfully');
+                if (response.ok) {
+                    if (response.status === 200)
+                        alert('Form submitted successfully');
 
-        navigate('/request');
-        // Handle success message or perform any other actions
-      } else {
-        const errorResponse = await response.json();
-        console.log(errorResponse.error);
-        // Handle error response or perform any other actions
-      }
-    } catch (error) {
-      console.log(error);
-      // Handle any error that occurred during form submission
-    }
-  } else {
-    setIsConfirmed(true);
-  }
-};
+                    navigate('/request');
+                    // Handle success message or perform any other actions
+                } else {
+                    const errorResponse = await response.json();
+                    console.log(errorResponse.error);
+                    // Handle error response or perform any other actions
+                }
+            } catch (error) {
+                console.log(error);
+                // Handle any error that occurred during form submission
+            }
+        } else {
+            setIsConfirmed(true);
+        }
+    };
 
     const handleEdit = () => {
         setIsConfirmed(false);
@@ -228,24 +228,6 @@ const Form = (props) => {
                                 />
                             </label>
 
-                            <label htmlFor="department" className=".textlabel form-label">
-                                Department:
-                            <br/>
-                                <select
-                                    id="department"
-                                    className="form-input"
-                                    onChange={(e) => setDepartment(e.target.value)}
-                                    required
-                                >
-                                    <option value="">Select Department</option>
-                                    <option value="Computer">Computer</option>
-                                    <option value="Electronics">Electronics</option>
-                                    <option value="EXTC">EXTC</option>
-                                    <option value="Instrumentation">Instrumentation</option>
-                                    <option value="IT">IT</option>
-                                </select>
-                            </label>
-
                             <label htmlFor="fullName" className=".textlabel form-label">
                                 Full Name:
                                 <input
@@ -259,16 +241,50 @@ const Form = (props) => {
                             </label>
 
 
+
+
+
                             <label htmlFor="classValue" className=".textlabel form-label">
                                 Class:
-                                <input
-                                    type="text"
+                                <br />
+                                <select
                                     id="classValue"
                                     className="form-input"
                                     value={classValue}
                                     onChange={(e) => setClassValue(e.target.value)}
                                     required
-                                />
+                                >
+                                    <option value="">Select Class</option>
+                                    <option value="FE">First Year of Engineering</option>
+                                    <option value="SE">Second Year of Engineering</option>
+                                    <option value="TE">Third Year of Engineering</option>
+                                    <option value="BE">Final Year of Engineering</option>
+                                </select>
+                            </label>
+
+                            <label htmlFor="department" className=".textlabel form-label">
+                                Department:
+                                <br />
+                                <select
+                                    id="department"
+                                    className="form-input"
+                                    onChange={(e) => setDepartment(e.target.value)}
+                                    required
+                                >
+                                    <option value="">Select Department</option>
+
+                                    <option value="Computer">Computer</option>
+                                    <option value="IT">Information Technology</option>
+                                    <option value="Elec">Electronics</option>
+                                    <option value="Elec & Comp">Electronics and Computer</option>
+                                    <option value="Instrumentation">Instrumentation</option>
+                                    <option value="Elec & Instr.">Electronics and Instrumentation</option>
+                                    <option value="Elec & Telecom.">Electronics and Telecomm</option>
+                                    <option value="CSBS">CSBS</option>
+                                    <option value="AIML">AI ML</option>
+                                    <option value="AIDS">AI DS</option>
+                                    <option value="Cyber Security">Cyber Security</option>
+                                </select>
                             </label>
 
                             <label htmlFor="passedOutYear" className=".textlabel form-label">
@@ -458,7 +474,7 @@ const ConfirmationDetails = (props) => {
 
     return (
         <div className="confirmation-details">
-        
+
             <h2>Please review your details:</h2>
             <p>Roll Number<span className='reqstar'>* </span>: <strong>{rollNumber}</strong></p>
             <p>Full Name<span className='reqstar'>* </span>: <strong>{fullName}</strong></p>

@@ -16,7 +16,7 @@
     padding-right: 0px;
     backdrop-filter: brightness(100%) blur(10px);
     background: #ffffffe7;
-    width: 100%;
+    min-width: 100%;
 }
 
 

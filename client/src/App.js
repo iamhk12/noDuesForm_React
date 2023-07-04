@@ -7,6 +7,7 @@ import Request from './Pages/Request';
 import ChangePassword from './Pages/ChangePassword'
 import "./App.css"
 import Root from "./Admin/Root"
+import AllRequests from "./Admin/AllRequests"
 import AdminLogin from './Admin/AdminLogin';
 import AdminRequests from './Admin/AdminRequests';
 import AdminLogout from './Admin/AdminLogout';
@@ -22,6 +23,7 @@ function App() {
         <Route exact path='/changepassword' element={<ChangePassword/>}/>
         <Route exact path='/logout' element={<Logout/>} />
         <Route exact path='/root' element={<Root/>} />
+        <Route exact path='/root/allrequests' element={<AllRequests/>} />
         <Route exact path='/admin/login' element={<AdminLogin/>} />
         <Route exact path='/adminrequests' element={<AdminRequests/>} />
         <Route exact path='/admin/logout' element={<AdminLogout/>} />

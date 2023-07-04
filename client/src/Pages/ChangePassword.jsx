@@ -37,7 +37,8 @@ const ChangePassword = () => {
           setCurrentPassword("");
           setNewPassword("");
           setConfirmPassword("");
-          navigate("/form");
+          alert("Password Changed successfully, Please login again.")
+          navigate("/logout");
         } else {
           alert("Failed to change password");
         }

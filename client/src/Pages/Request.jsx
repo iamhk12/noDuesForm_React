@@ -31,8 +31,8 @@ const Request = () => {
                         // Check if stored password matches fetched student data password
                         if (storedPassword === student.password) {
                             console.log("Good")
-                            if (student.isFilled) {
-                                navigate('/request');
+                            if (!student.isFilled) {
+                                navigate('/form');
                             }
                         } else {
                             navigate('/logout');

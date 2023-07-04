@@ -52,13 +52,7 @@ router.post('/student/login', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-router.post('/getStudent', async (req, res) => {
-  const { rollNumber } = req.body;
-  const student = await Student.findOne({ rollNumber });
-  if (!student) res.status(401).json({ message: "Student not found" })
-  else res.status(200).json(student);
 
-})
 
 router.post('/submitform', async (req, res) => {
   try {
@@ -151,6 +145,13 @@ router.post('/submitform', async (req, res) => {
   }
 });
 
+router.post('/getStudent', async (req, res) => {
+  const { rollNumber } = req.body;
+  const student = await Student.findOne({ rollNumber });
+  if (!student) res.status(401).json({ message: "Student not found" })
+  else res.status(200).json(student);
+
+})
 
 router.post('/getStudentRequest', async (req, res) => {
   const { rollNumber } = req.body;
@@ -221,10 +222,30 @@ router.post('/updateRequest', async (req, res) => {
     // Find the request in the database using the roll number and section
     const request = await Request.findOne({ rollNumber: rollno });
     if (!request) {
-      return res.status(404).json({ error: 'Request not found' });
+      return res.status(405).json({ error: 'Request not found' });
     }
 
     request[section] = true;
+    const updatedRequest = await request.save();
+
+    return res.json(updatedRequest);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to update request' });
+  }
+});
+
+router.post('/rootUpdateRequest', async (req, res) => {
+  try {
+    const { rollNumber, section, value } = req.body;
+
+    // Find the request in the database using the roll number and section
+    const request = await Request.findOne({ rollNumber });
+    if (!request) {
+      return res.status(405).json({ error: 'Request not found' });
+    }
+
+    request[section] = value;
     const updatedRequest = await request.save();
 
     return res.json(updatedRequest);
@@ -288,6 +309,15 @@ router.get('/getAllStudents', async (req, res) => {
     res.status(200).json({ students });
   } catch (error) {
     console.error('Error fetching students:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+router.get('/getAllRequests', async (req, res) => {
+  try {
+    const requests = await Request.find();
+    res.status(200).json({ requests });
+  } catch (error) {
+    console.error('Error fetching requests:', error);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
