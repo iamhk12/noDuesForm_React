@@ -11,8 +11,12 @@ const AdminLogin = () => {
         const storedPassword = localStorage.getItem('password');
         const expirationDate = new Date(localStorage.getItem('expirationDate'));
 
-        if (storedID && storedPassword && expirationDate > new Date()) {
-            if ((storedID === "celabs@rait" && storedPassword === "rait@celabs") ||
+        if (storedID && storedPassword && expirationDate > new Date() && storedID === "admin" && storedPassword === "rait") {
+            navigate('/root')
+        }
+        
+        else if (storedID && storedPassword && expirationDate > new Date()) {
+            if ((storedID === "deplabs@rait" && storedPassword === "rait@deplabs") ||
                 (storedID === "commonlabs@rait" && storedPassword === "rait@commonlabs") ||
                 (storedID === "accounts@rait" && storedPassword === "rait@accounts") ||
                 (storedID === "exam@rait" && storedPassword === "rait@exam") ||
@@ -23,11 +27,9 @@ const AdminLogin = () => {
 
                 navigate('/adminrequests')
             }
-
-
         } else {
             // Clear the stored values if expired or not present
-            localStorage.removeItem('rollno');
+            localStorage.removeItem('id');
             localStorage.removeItem('password');
             localStorage.removeItem('expirationDate');
 
@@ -48,7 +50,39 @@ const AdminLogin = () => {
             return;
         }
 
-        if ((id === "celabs@rait" && password !== "rait@celabs") ||
+
+        if (id === "admin" && password === "rait") {
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 3); // Set expiration to three days from now
+
+            localStorage.setItem("id", id);
+            localStorage.setItem("password", password);
+            localStorage.setItem("expirationDate", expirationDate.toISOString());
+
+            navigate('/root')
+            return;
+        }
+        else if ((id === "deplabs@rait" && password === "rait@deplabs") ||
+            (id === "commonlabs@rait" && password === "rait@commonlabs") ||
+            (id === "accounts@rait" && password === "rait@accounts") ||
+            (id === "exam@rait" && password === "rait@exam") ||
+            (id === "library@rait" && password === "rait@library") ||
+            (id === "store@rait" && password === "rait@store") ||
+            (id === "deplib@rait" && password === "rait@deplib") ||
+            (id === "tpc@rait" && password === "rait@tpc")) {
+
+
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 3); // Set expiration to three days from now
+
+            localStorage.setItem("id", id);
+            localStorage.setItem("password", password);
+            localStorage.setItem("expirationDate", expirationDate.toISOString());
+
+            navigate('/adminrequests')
+            return;
+        }
+        else if ((id === "deplabs@rait" && password !== "rait@deplabs") ||
             (id === "commonlabs@rait" && password !== "rait@commonlabs") ||
             (id === "accounts@rait" && password !== "rait@accounts") ||
             (id === "exam@rait" && password !== "rait@exam") ||
@@ -58,16 +92,16 @@ const AdminLogin = () => {
             (id === "tpc@rait" && password !== "rait@tpc")) {
 
             alert("Incorrect ID/Password");
+            return;
+
+        }
+        else {
+            alert("Please login through faculty ID/Password")
+            return;
+
         }
 
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 3); // Set expiration to three days from now
 
-        localStorage.setItem("id", id);
-        localStorage.setItem("password", password);
-        localStorage.setItem("expirationDate", expirationDate.toISOString());
-
-        navigate('/adminrequests')
 
     };
 

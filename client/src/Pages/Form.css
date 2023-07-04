@@ -31,6 +31,13 @@
     transition: all 0.2s ease;
 }
 
+.reqstar{
+    color: red;
+}
+.formpage select{
+    width: 100%;
+}
+
 .formpage .confirmation-details h2 {
     margin-bottom: 20px;
     text-align: center;

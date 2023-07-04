@@ -9,6 +9,7 @@ const Form = (props) => {
     const navigate = useNavigate();
     const [fullName, setFullName] = useState('');
     const [rollNumber, setRollNumber] = useState(localStorage.getItem('rollno') || '');
+    const [department, setDepartment] = useState('');
     const [classValue, setClassValue] = useState('');
     const [passedOutYear, setPassedOutYear] = useState('');
     const [postalAddress, setPostalAddress] = useState('');
@@ -21,8 +22,9 @@ const Form = (props) => {
     const [isConfirmed, setIsConfirmed] = useState(false);
 
     const [areYouPlaced, setAreYouPlaced] = useState(false);
-    const [offerLetter, setOfferLetter] = useState(null);
-    const [letterOfJoining, setLetterOfJoining] = useState(null);
+    const [offerLetter, setOfferLetter] = useState({ name: "", myfile: "" });
+    const [internship, setInternship] = useState({ name: "", myfile: "" });
+    const [letterOfJoining, setLetterOfJoining] = useState({ name: "", myfile: "" });
 
     useEffect(() => {
         const fetchStudentData = async () => {
@@ -70,63 +72,117 @@ const Form = (props) => {
         fetchStudentData();
     }, [navigate]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+   const handleSubmit = async (e) => {
+  e.preventDefault();
 
-        if (isConfirmed) {
-            try {
-                const formData = {
-                    rollNumber,
-                    fullName,
-                    classValue,
-                    passedOutYear,
-                    postalAddress,
-                    email,
-                    semester,
-                    phone,
-                    date: date.toISOString(),
-                    feeReceiptNumber,
-                    amount,
-                    areYouPlaced: areYouPlaced.toString(),
-                    offerLetter: offerLetter ? offerLetter.name : '',
-                    letterOfJoining: letterOfJoining ? letterOfJoining.name : '',
-                };
+  if (isConfirmed) {
+    // Perform form validation
+    if (
+      rollNumber.trim() === '' ||
+      fullName.trim() === '' ||
+      department === '' ||
+      classValue.trim() === '' ||
+      passedOutYear.trim() === '' ||
+      postalAddress.trim() === '' ||
+      email.trim() === '' ||
+      semester.trim() === '' ||
+      phone.trim() === '' ||
+      feeReceiptNumber.trim() === '' ||
+      amount.trim() === ''
+    ) {
+      alert('Please fill in all the required fields.');
+      return;
+    }
 
-                const response = await fetch('http://localhost:5000/submitform', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
+    if (areYouPlaced) {
+      if (!offerLetter.myfile || !letterOfJoining.myfile) {
+        alert('Please upload the required files.');
+        return;
+      }
+    }
 
-                if (response.ok) {
-                    if (response.status === 200)
-                        alert("Form submitted successfully")
+    try {
+      // Form data validation passed, proceed with form submission
+      const formData = {
+        rollNumber,
+        fullName,
+        department,
+        classValue,
+        passedOutYear,
+        postalAddress,
+        email,
+        semester,
+        phone,
+        date: date.toISOString(),
+        feeReceiptNumber,
+        amount,
+        areYouPlaced: areYouPlaced.toString(),
+        offerLetter: offerLetter ? offerLetter : {},
+        internship: internship ? internship : {},
+        letterOfJoining: letterOfJoining ? letterOfJoining : {},
+      };
+      const response = await fetch('http://localhost:5000/submitform', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-                    navigate('/request')
-                    // Handle success message or perform any other actions
+      if (response.ok) {
+        if (response.status === 200)
+          alert('Form submitted successfully');
 
-                } else {
-                    const errorResponse = await response.json();
-                    console.log(errorResponse.error);
-                    // Handle error response or perform any other actions
-                }
-
-            } catch (error) {
-                console.log(error);
-                // Handle any error that occurred during form submission
-            }
-
-        } else {
-            setIsConfirmed(true);
-        }
-    };
+        navigate('/request');
+        // Handle success message or perform any other actions
+      } else {
+        const errorResponse = await response.json();
+        console.log(errorResponse.error);
+        // Handle error response or perform any other actions
+      }
+    } catch (error) {
+      console.log(error);
+      // Handle any error that occurred during form submission
+    }
+  } else {
+    setIsConfirmed(true);
+  }
+};
 
     const handleEdit = () => {
         setIsConfirmed(false);
     };
 
+
+    const handlejoiningletter = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertbase64(file);
+        setLetterOfJoining({ ...letterOfJoining, myfile: base64, name: file.name });
+    }
+    const handleofferletter = async (e) => {
+        console.log(e.target.files[0]);
+        const file = e.target.files[0];
+        const base64 = await convertbase64(file);
+        setOfferLetter({ ...offerLetter, myfile: base64, name: file.name });
+    }
+    const handleInternship = async (e) => {
+        console.log(e.target.files[0]);
+        const file = e.target.files[0];
+        const base64 = await convertbase64(file);
+        setInternship({ ...internship, myfile: base64, name: file.name });
+    }
+    function convertbase64(file) {
+        return new Promise((resolve, reject) => {
+            const filereader = new FileReader();
+            filereader.readAsDataURL(file);
+            filereader.onload = () => {
+                resolve(filereader.result);
+            };
+            filereader.onerror = (error) => {
+                reject(error);
+            }
+        })
+    }
     return (
         <>
             <Nav />
@@ -138,6 +194,7 @@ const Form = (props) => {
                             <ConfirmationDetails
                                 fullName={fullName}
                                 rollNumber={rollNumber}
+                                department={department}
                                 classValue={classValue}
                                 passedOutYear={passedOutYear}
                                 postalAddress={postalAddress}
@@ -149,6 +206,7 @@ const Form = (props) => {
                                 amount={amount}
                                 areYouPlaced={areYouPlaced}
                                 letterOfJoining={letterOfJoining}
+                                internship={internship}
                                 offerLetter={offerLetter}
                             />
                             <div className="form-buttons">
@@ -168,6 +226,24 @@ const Form = (props) => {
                                     onChange={(e) => setRollNumber(e.target.value)}
                                     required
                                 />
+                            </label>
+
+                            <label htmlFor="department" className=".textlabel form-label">
+                                Department:
+                            <br/>
+                                <select
+                                    id="department"
+                                    className="form-input"
+                                    onChange={(e) => setDepartment(e.target.value)}
+                                    required
+                                >
+                                    <option value="">Select Department</option>
+                                    <option value="Computer">Computer</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="EXTC">EXTC</option>
+                                    <option value="Instrumentation">Instrumentation</option>
+                                    <option value="IT">IT</option>
+                                </select>
                             </label>
 
                             <label htmlFor="fullName" className=".textlabel form-label">
@@ -319,7 +395,21 @@ const Form = (props) => {
                                             id="offerLetter"
                                             className="form-input"
                                             required
-                                            onChange={(e) => setOfferLetter(e.target.files[0])}
+                                            name='myfile'
+                                            accept='.jpeg , .png , .jpg , .pdf'
+                                            onChange={(e) => handleofferletter(e)}
+                                        />
+                                    </label>
+                                    <label htmlFor="offerLetter" className="textlabel form-label">
+                                        Internship {"- Offer Letter / Joining Letter / Experience certificate :"}
+                                        <input
+                                            type="file"
+                                            id="internship"
+                                            className="form-input"
+                                            required
+                                            name='myfile'
+                                            accept='.jpeg , .png , .jpg , .pdf'
+                                            onChange={(e) => handleInternship(e)}
                                         />
                                     </label>
 
@@ -330,7 +420,9 @@ const Form = (props) => {
                                             id="letterOfJoining"
                                             className="form-input"
                                             required
-                                            onChange={(e) => setLetterOfJoining(e.target.files[0])}
+                                            name='myfile'
+                                            accept='.jpeg , .png , .jpg, .pdf'
+                                            onChange={(e) => handlejoiningletter(e)}
                                         />
                                     </label>
                                 </>
@@ -349,6 +441,7 @@ const ConfirmationDetails = (props) => {
     const {
         fullName,
         rollNumber,
+        department,
         classValue,
         passedOutYear,
         postalAddress,
@@ -365,19 +458,21 @@ const ConfirmationDetails = (props) => {
 
     return (
         <div className="confirmation-details">
+        
             <h2>Please review your details:</h2>
-            <p>Full Name: <strong>{fullName}</strong></p>
-            <p>Roll Number: <strong>{rollNumber}</strong></p>
-            <p>Class: <strong>{classValue}</strong></p>
-            <p>Passed Out Year: <strong>{passedOutYear}</strong></p>
-            <p>Postal Address: <strong>{postalAddress}</strong></p>
-            <p>Email ID: <strong>{email}</strong></p>
-            <p>Semester: <strong>{semester}</strong></p>
-            <p>Phone: <strong>{phone}</strong></p>
-            <p>Date: <strong>{date.toLocaleDateString()}</strong></p>
-            <p>Fee Receipt Number: <strong>{feeReceiptNumber}</strong></p>
-            <p>Amount: <strong>{amount}</strong></p>
-            <p>Are you placed? <strong>{areYouPlaced ? 'Yes' : 'No'}</strong></p> {/* Display the value of areYouPlaced */}
+            <p>Roll Number<span className='reqstar'>* </span>: <strong>{rollNumber}</strong></p>
+            <p>Full Name<span className='reqstar'>* </span>: <strong>{fullName}</strong></p>
+            <p>Department<span className='reqstar'>* </span>: <strong>{department}</strong></p>
+            <p>Class<span className='reqstar'>* </span>: <strong>{classValue}</strong></p>
+            <p>Passed Out Year<span className='reqstar'>* </span>: <strong>{passedOutYear}</strong></p>
+            <p>Postal Address<span className='reqstar'>* </span>: <strong>{postalAddress}</strong></p>
+            <p>Email ID<span className='reqstar'>* </span>: <strong>{email}</strong></p>
+            <p>Semester<span className='reqstar'>* </span>: <strong>{semester}</strong></p>
+            <p>Phone<span className='reqstar'>* </span>: <strong>{phone}</strong></p>
+            <p>Date<span className='reqstar'>* </span>: <strong>{date.toLocaleDateString()}</strong></p>
+            <p>Fee Receipt Number<span className='reqstar'>* </span>: <strong>{feeReceiptNumber}</strong></p>
+            <p>Amount<span className='reqstar'>* </span>: <strong>{amount}</strong></p>
+            <p>Are you placed?<span className='reqstar'>* </span><strong>{areYouPlaced ? 'Yes' : 'No'}</strong></p> {/* Display the value of areYouPlaced */}
             {areYouPlaced && (
                 <>
                     <p>

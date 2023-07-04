@@ -7,6 +7,10 @@ const studentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    department :{
+        type: String,
+        trim: true
+    },
     fullName: {
         type: String,
         trim: true
@@ -50,10 +54,13 @@ const studentSchema = new mongoose.Schema({
         type: Boolean,
     },
     offerLetter: {
-        type: String,
+        type:{}
+    },
+    internship: {
+        type:{}
     },
     letterOfJoining: {
-        type: String,
+        type:{}
     },
     isFilled: {
         type: Boolean,
@@ -82,6 +89,10 @@ const requestSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    department :{
+        type: String,
+        trim: true
+    },
     classValue: {
         type: String,
         trim: true
@@ -90,7 +101,10 @@ const requestSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    celabs: {
+    areYouPlaced: {
+        type: Boolean,
+    },
+    deplabs: {
         type: Boolean
     },
     commonlabs:{

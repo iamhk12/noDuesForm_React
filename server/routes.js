@@ -19,6 +19,7 @@ router.post('/student/login', async (req, res) => {
         rollNumber,
         password: 'dypatil@123',
         fullName: '',
+        department: '',
         classValue: '',
         passedOutYear: '',
         postalAddress: '',
@@ -29,8 +30,9 @@ router.post('/student/login', async (req, res) => {
         feeReceiptNumber: '',
         amount: '',
         areYouPlaced: false,
-        offerLetter: '',
-        letterOfJoining: '',
+        offerLetter: {},
+        internship: {},
+        letterOfJoining: {},
         isFilled: false,
         isCompleted: false
       });
@@ -60,9 +62,11 @@ router.post('/getStudent', async (req, res) => {
 
 router.post('/submitform', async (req, res) => {
   try {
+
     const {
       rollNumber,
       fullName,
+      department,
       classValue,
       passedOutYear,
       postalAddress,
@@ -74,11 +78,10 @@ router.post('/submitform', async (req, res) => {
       amount,
       areYouPlaced,
       offerLetter,
+      internship,
       letterOfJoining
     } = req.body;
-
     const student = await Student.findOne({ rollNumber });
-
     if (!student) {
       res.status(404).json({ message: 'Student not found' });
       return;
@@ -86,6 +89,7 @@ router.post('/submitform', async (req, res) => {
 
     student.fullName = fullName;
     student.classValue = classValue;
+    student.department = department;
     student.passedOutYear = passedOutYear;
     student.postalAddress = postalAddress;
     student.email = email;
@@ -96,6 +100,7 @@ router.post('/submitform', async (req, res) => {
     student.amount = amount;
     student.areYouPlaced = areYouPlaced;
     student.offerLetter = offerLetter;
+    student.internship = internship;
     student.letterOfJoining = letterOfJoining;
     student.isFilled = true;
 
@@ -106,8 +111,9 @@ router.post('/submitform', async (req, res) => {
     if (rq) {
       rq.fullName = fullName;
       rq.classValue = classValue;
+      rq.department = department;
       rq.semester = semester;
-      rq.celabs = false;
+      rq.deplabs = false;
       rq.commonlabs = false;
       rq.accounts = false;
       rq.exam = false;
@@ -122,8 +128,10 @@ router.post('/submitform', async (req, res) => {
         rollNumber,
         fullName,
         classValue,
+        department,
         semester,
-        celabs: false,
+        areYouPlaced,
+        deplabs: false,
         commonlabs: false,
         accounts: false,
         exam: false,
@@ -166,28 +174,55 @@ router.post('/getStudentRequest', async (req, res) => {
 router.post('/adminrequests', async (req, res) => {
   try {
     const { section } = req.body;
-
-    console.log("Searching request for ", section)
-
+    let request = [];
     // Find requests with false in the given section
-    const requests = await Request.find({ [section]: false });
-
-    res.status(200).json(requests);
+    if (section !== 'tpc') {
+      request = await Request.find({ [section]: false });
+    } else if (section === 'tpc') {
+      request = await Request.find({ [section]: false });
+      for (var i = 0; i < request.length; i++) {
+        if (request[i].areYouPlaced === true) {
+          const temp = await Student.findOne({ rollNumber: request[i].rollNumber });
+          const newrequest = {
+            rollNumber: request[i].rollNumber,
+            fullName: request[i].fullName,
+            department: request[i].department,
+            classValue: request[i].classValue,
+            semester: request[i].semester,
+            areYouPlaced: request[i].areYouPlaced,
+            deplabs: request[i].deplabs,
+            commonlabs: request[i].commonlabs,
+            accounts: request[i].accounts,
+            exam: request[i].exam,
+            library: request[i].library,
+            deplib: request[i].deplib,
+            store: request[i].store,
+            tpc: request[i].tpc,
+            offerLetter: temp.offerLetter,
+            internship: temp.internship,
+            letterOfJoining: temp.letterOfJoining
+          }
+          request[i] = newrequest;
+        }
+      }
+    }
+    res.status(200).json(request);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+
 router.post('/updateRequest', async (req, res) => {
   try {
-    const { requestId, section } = req.body;
+    const { rollno, section } = req.body;
 
-    // Find the request in the database
-    const request = await Request.findById(requestId);
+    // Find the request in the database using the roll number and section
+    const request = await Request.findOne({ rollNumber: rollno });
     if (!request) {
       return res.status(404).json({ error: 'Request not found' });
     }
-
 
     request[section] = true;
     const updatedRequest = await request.save();
@@ -198,4 +233,38 @@ router.post('/updateRequest', async (req, res) => {
     return res.status(500).json({ error: 'Failed to update request' });
   }
 });
+
+
+router.post('/updateIsComp', async (req, res) => {
+  const { rollNumber } = req.body;
+
+
+  try {
+    const student = await Student.findOne({ rollNumber });
+
+    if (student) {
+      student.isCompleted = true;
+      const updatedStudent = await student.save();
+
+      return res.status(200).json({ message: 'Student document updated successfully.' });
+    } else {
+      return res.status(404).json({ error: 'Student not found.' });
+    }
+  } catch (error) {
+    console.error('Error updating student:', error);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+router.get('/getAllStudents', async (req, res) => {
+  try {
+    const students = await Student.find();
+    res.status(200).json({ students });
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+
 module.exports = router;

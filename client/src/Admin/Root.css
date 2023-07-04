@@ -1,0 +1,57 @@
+.rootPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    min-height: 80vh;
+    width: 100%;
+}
+
+.rootPage .head {
+    text-align: center;
+}
+
+.rootPage .root_content {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rootPage input[type="text"] {
+    padding: 8px;
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+.rootPage table {
+    border-collapse: collapse;
+    width: 70%;
+}
+
+.rootPage th,
+.rootPage td {
+    text-align: left;
+    padding: 8px;
+}
+
+.rootPage th {
+    background-color: #f2f2f2;
+}
+
+.rootPage tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+.rootPage .spanApp {
+    color: green;
+    font-weight: 600;
+}
+
+.rootPage .spanPen {
+    color: green;
+    font-weight: 600;
+}

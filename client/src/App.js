@@ -5,6 +5,7 @@ import Form from './Pages/Form'
 import Logout from './Pages/Logout';
 import Request from './Pages/Request';
 import "./App.css"
+import Root from "./Admin/Root"
 import AdminLogin from './Admin/AdminLogin';
 import AdminRequests from './Admin/AdminRequests';
 import AdminLogout from './Admin/AdminLogout';
@@ -13,10 +14,12 @@ function App() {
   return (
     <>
       <Routes>
+        <Route exact path='/' element={<Login/>} />
         <Route exact path='/login' element={<Login/>} />
         <Route exact path='/form' element={<Form/>} />
         <Route exact path='/request' element={<Request/>}/>
         <Route exact path='/logout' element={<Logout/>} />
+        <Route exact path='/root' element={<Root/>} />
         <Route exact path='/admin/login' element={<AdminLogin/>} />
         <Route exact path='/adminrequests' element={<AdminRequests/>} />
         <Route exact path='/admin/logout' element={<AdminLogout/>} />
